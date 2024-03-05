@@ -1,5 +1,6 @@
 const http = require('http');
 const headers = require('./headers');
+const resHandle = require('./resHandle');
 const Room = require('./models/room');
 const dotenv = require('dotenv');
 
@@ -46,52 +47,25 @@ const requestListener = async (req, res) => {
 
     if (url === '/rooms' && method === 'GET') {
         const rooms = await Room.find();
-        res.writeHead(200, headers);
-        res.write(JSON.stringify({
-            'status': 'success',
-            'data': rooms
-        }));
-        res.end();
+        resHandle(res, 200, rooms);
     } else if (url === '/rooms' && method === 'POST') {
         req.on('end', async () => {
             try {
                 const { name, price, rating } = JSON.parse(body);
                 const addRoom = await Room.create({ name, price, rating });
-                res.writeHead(200, headers);
-                res.write(JSON.stringify({
-                    'status': 'success',
-                    'data': addRoom
-                }));
-                res.end();
+                resHandle(res, 200, addRoom);
             } catch ({ errors }) {
-                res.writeHead(400, headers);
-                res.write(JSON.stringify({
-                    'status': false,
-                    'message': '欄位填寫錯誤或找不到此 id',
-                    'error': errors
-                }));
-                res.end();
+                resHandle(res, 400);
             }
         });
     } else if (url === '/rooms' && method === 'DELETE') {
         await Room.deleteMany({});
         const rooms = await Room.find();
-        res.writeHead(200, headers);
-        res.write(JSON.stringify({
-            'status': 'success',
-            'data': rooms
-        }));
-        res.end();
-
+        resHandle(res, 200, rooms);
     } else if (url.startsWith('/rooms/') && method === 'DELETE') {
         const id = url.split('/').pop();
         const delRoom = await Room.findByIdAndDelete(id);
-        res.writeHead(200, headers);
-        res.write(JSON.stringify({
-            'status': 'success',
-            'data': delRoom
-        }));
-        res.end();
+        resHandle(res, 200, delRoom);
     } else if (url.startsWith('/rooms/') && method === 'PATCH') {
         req.on('end', async () => {
             try {
@@ -99,32 +73,16 @@ const requestListener = async (req, res) => {
                 const id = url.split('/').pop();
                 await Room.findByIdAndUpdate(id, updateData);
                 const updateRoom = await Room.findById(id);
-                res.writeHead(200, headers);
-                res.write(JSON.stringify({
-                    'status': 'success',
-                    'data': updateRoom
-                }));
-                res.end();
+                resHandle(res, 200, updateRoom);
             } catch ({ errors }) {
-                res.writeHead(400, headers);
-                res.write(JSON.stringify({
-                    'status': false,
-                    'message': '欄位填寫錯誤或找不到此 id',
-                    'error': errors
-                }));
-                res.end();
+                resHandle(res, 400);
             }
         });
     } else if (method === 'OPTIONS') {
         res.writeHead(200, headers);
         res.end();
     } else {
-        res.writeHead(404, headers);
-        res.write(JSON.stringify({
-            'status': false,
-            'message': '沒有此路由頁面'
-        }));
-        res.end();
+        resHandle(res, 404);
     }
     
 };
