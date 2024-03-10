@@ -1,6 +1,6 @@
 const headers = require('./headers');
 
-function resHanlde(res, statusCode, data) {
+function resHandle(res, statusCode, data) {
     let resData;
 
     switch (statusCode) {
@@ -24,4 +24,4 @@ function resHanlde(res, statusCode, data) {
     res.end();
 }
 
-module.exports = resHanlde;
+module.exports = resHandle;
