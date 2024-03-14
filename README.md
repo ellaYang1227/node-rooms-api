@@ -1,5 +1,5 @@
 # 房型 RESTful API
-[六角]2024 Nodo.js 企業專題班 - 房型 RESTful API(連接資料庫 mongodb)
+[六角]2024 Node.js 企業專題班 - 房型 RESTful API(連接資料庫 mongodb)
 
 [[API URL]https://node-rooms-api.onrender.com/](https://node-rooms-api.onrender.com/)
 
@@ -37,7 +37,7 @@ npm run start
 ### 使用 nodemon 啟動伺服器
 需先安裝 nodemon 套件
 ```
-nodemon server.js
+nodemon bin/www
 ```
 
 ### 瀏覽器開啟專案
